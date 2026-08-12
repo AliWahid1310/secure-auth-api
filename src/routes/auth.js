@@ -1,5 +1,6 @@
 import { Router } from "express";
 import supabase from "../config/supabase.js";
+import verifyToken from "../middleware/auth.js";
 
 const router = Router();
 
@@ -73,4 +74,24 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// ==========================================
+//  POST /auth/logout — Terminate user session
+//  Protected: requires valid Bearer token
+// ==========================================
+router.post("/logout", verifyToken, async (req, res) => {
+  try {
+    const { error } = await supabase.auth.signOut(req.token);
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.status(204).send();
+  } catch (err) {
+    console.error("Logout error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
+

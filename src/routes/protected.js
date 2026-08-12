@@ -1,47 +1,39 @@
 import { Router } from "express";
-import supabase from "../config/supabase.js";
+import verifyToken from "../middleware/auth.js";
 
 const router = Router();
 
 // ==========================================
-//  GET /protected/profile — Requires verified Bearer token
+//  GET /protected/profile — User profile data
+//  Uses verifyToken middleware for auth
 // ==========================================
-router.get("/profile", async (req, res) => {
-  try {
-    // Extract the Authorization header
-    const authHeader = req.headers.authorization;
+router.get("/profile", verifyToken, (req, res) => {
+  return res.status(200).json({
+    message: "Profile retrieved successfully",
+    user: {
+      id: req.user.id,
+      email: req.user.email,
+      created_at: req.user.created_at,
+    },
+  });
+});
 
-    // Check if the header exists and follows "Bearer <token>" format
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Access token required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    if (!token) {
-      return res.status(401).json({ error: "Access token required" });
-    }
-
-    // Verify the token with Supabase
-    const { data, error } = await supabase.auth.getUser(token);
-
-    if (error || !data.user) {
-      return res.status(401).json({ error: "Invalid or expired token" });
-    }
-
-    // Token is valid — return user profile data
-    return res.status(200).json({
-      message: "Profile retrieved successfully",
-      user: {
-        id: data.user.id,
-        email: data.user.email,
-        created_at: data.user.created_at,
-      },
-    });
-  } catch (err) {
-    console.error("Profile error:", err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
+// ==========================================
+//  GET /protected/dashboard — Dashboard data
+//  Uses verifyToken middleware for auth
+// ==========================================
+router.get("/dashboard", verifyToken, (req, res) => {
+  return res.status(200).json({
+    message: "Welcome to your dashboard",
+    user: {
+      id: req.user.id,
+      email: req.user.email,
+    },
+    dashboard: {
+      last_sign_in: req.user.last_sign_in_at,
+      role: req.user.role,
+    },
+  });
 });
 
 export default router;
