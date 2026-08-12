@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import supabase from "./config/supabase.js";
+import authRoutes from "./routes/auth.js";
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Secure Auth API is running" });
 });
+
+// --------------- Routes ---------------
+app.use("/auth", authRoutes);
 
 // --------------- Start Server ---------------
 app.listen(PORT, () => {
