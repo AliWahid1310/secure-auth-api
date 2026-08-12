@@ -1,0 +1,26 @@
+{
+  "name": "secure-auth-api",
+  "version": "1.0.0",
+  "description": "A secure API that handles user authentication using Supabase Auth with JWT token verification",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [
+    "auth",
+    "supabase",
+    "jwt",
+    "express",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
