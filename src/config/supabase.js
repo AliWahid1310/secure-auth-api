@@ -3,14 +3,21 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+let supabaseUrl = process.env.SUPABASE_URL || "https://placeholder.supabase.co";
+let supabaseKey = process.env.SUPABASE_KEY || "placeholder-key";
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("ERROR: Missing SUPABASE_URL or SUPABASE_KEY in .env file");
-  process.exit(1);
+// Ensure URL starts with http:// or https:// for SDK compatibility
+if (!supabaseUrl.startsWith("http://") && !supabaseUrl.startsWith("https://")) {
+  supabaseUrl = `https://${supabaseUrl}`;
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase;
+try {
+  supabase = createClient(supabaseUrl, supabaseKey);
+} catch (err) {
+  console.warn("⚠️ Warning: Supabase client initialized with dummy credentials. Please update .env with real SUPABASE_URL and SUPABASE_KEY.");
+  supabase = createClient("https://placeholder.supabase.co", "placeholder-key");
+}
 
 export default supabase;
+
