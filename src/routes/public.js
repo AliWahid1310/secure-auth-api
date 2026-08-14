@@ -8,6 +8,9 @@ const router = Router();
 router.get("/info", (req, res) => {
   return res.status(200).json({
     message: "Welcome stranger! This info is public.",
+    api: "Secure Auth API",
+    version: "1.0.0",
+    documentation: "/docs",
   });
 });
 
