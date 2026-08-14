@@ -1,8 +1,21 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import supabase from "../config/supabase.js";
 import verifyToken from "../middleware/auth.js";
 
 const router = Router();
+
+// Rate limiter: max 10 auth requests per 15 minutes per IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: "Too many requests, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply rate limiting to all auth routes
+router.use(authLimiter);
 
 // Simple email format validation
 const isValidEmail = (email) => {
