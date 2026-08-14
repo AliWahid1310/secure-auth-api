@@ -35,5 +35,24 @@ router.get("/dashboard", verifyToken, (req, res) => {
     },
   });
 });
+// ==========================================
+//  GET /protected/admin — Admin-only data
+//  Uses verifyToken middleware for auth
+// ==========================================
+router.get("/admin", verifyToken, (req, res) => {
+  return res.status(200).json({
+    message: "Welcome, admin! Here are the server stats.",
+    admin: {
+      user_id: req.user.id,
+      email: req.user.email,
+      role: req.user.role || "authenticated",
+    },
+    server: {
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+      node_version: process.version,
+    },
+  });
+});
 
 export default router;
