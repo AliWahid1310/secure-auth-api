@@ -323,6 +323,43 @@
                     "message": {
                       "type": "string",
                       "example": "Welcome stranger! This info is public."
+                    },
+                    "api": {
+                      "type": "string",
+                      "example": "Secure Auth API"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    },
+                    "documentation": {
+                      "type": "string",
+                      "example": "/docs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Public"],
+        "summary": "Health check",
+        "description": "Returns a simple message confirming the API is running.",
+        "responses": {
+          "200": {
+            "description": "API is running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Secure Auth API is running"
                     }
                   }
                 }
