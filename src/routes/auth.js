@@ -4,6 +4,12 @@ import verifyToken from "../middleware/auth.js";
 
 const router = Router();
 
+// Simple email format validation
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 // ==========================================
 //  POST /auth/signup — Register a new user
 // ==========================================
@@ -15,6 +21,18 @@ router.post("/signup", async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         error: "Email and password are required",
+      });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        error: "Invalid email format",
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: "Password must be at least 6 characters",
       });
     }
 
@@ -49,6 +67,12 @@ router.post("/login", async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         error: "Email and password are required",
+      });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        error: "Invalid email format",
       });
     }
 
