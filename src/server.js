@@ -49,6 +49,20 @@ app.use("/auth", authRoutes);
 app.use("/public", publicRoutes);
 app.use("/protected", protectedRoutes);
 
+// --------------- 404 Handler ---------------
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    path: req.originalUrl,
+  });
+});
+
+// --------------- Global Error Handler ---------------
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
+
 // --------------- Start Server ---------------
 app.listen(PORT, () => {
   console.log(`Server running and connected to Supabase on port ${PORT}`);
