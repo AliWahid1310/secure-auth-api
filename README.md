@@ -218,12 +218,21 @@ secure-auth-api/
 
 ---
 
-## 🔒 Security Notes
+## 🤖 Stage 7: AI vs Me Analysis
 
-- **Passwords** are never stored or handled by this server — Supabase Auth manages all credential security
-- **JWT tokens** are verified server-side via `supabase.auth.getUser(token)` on every protected request
-- **Environment variables** keep Supabase credentials out of source code
-- **Auth middleware** is extracted into a reusable function to prevent code duplication and ensure consistent security checks
+An analysis comparing manual engineering vs AI-assisted code generation for secure authentication APIs:
+
+### 1. Token Extraction & Header Parsing
+- **Manual Implementation**: Strict check for `Authorization` header presence, format validation (`startsWith("Bearer ")`), and safe splitting (`authHeader.split(" ")[1]`).
+- **AI Assumptions**: AI models often assume `req.headers.authorization` is always populated or perform simple `split(" ")` without checking if the array element exists, leading to `TypeError: Cannot read properties of undefined` runtime crashes when unauthenticated requests are sent.
+
+### 2. Security Flaws & Token Verification
+- **Manual Implementation**: Uses `supabase.auth.getUser(token)` to perform an actual cryptographic server-side validation against Supabase Auth servers.
+- **AI Assumptions**: AI generators frequently attempt `jwt.verify(token, secret)` using the Supabase `anon` key as secret, which fails for Supabase JWTs signed with asymmetric keys or project-specific JWT secrets. Alternatively, AI might fall back to `supabase.auth.getSession()`, which does not guarantee that the token hasn't been revoked.
+
+### 3. Rate Limiting & Input Sanitization
+- **Manual Implementation**: Added `express-rate-limit` on auth routes to prevent brute force password attempts and added regex email format validation + min length checks.
+- **AI Assumptions**: Basic AI prompts yield bare minimum handlers without rate limiting or payload validation unless explicitly prompted with detailed constraints.
 
 ---
 
